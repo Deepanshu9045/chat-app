@@ -1,0 +1,47 @@
+<div class="chat-container">
+  <!-- Login Screen -->
+  <div *ngIf="!isJoined" class="login-screen">
+    <h2>Join Chat</h2>
+    <input type="text" [(ngModel)]="username" placeholder="Enter your username" (keyup.enter)="joinChat()" />
+    <button (click)="joinChat()">Join</button>
+  </div>
+
+  <!-- Chat Interface -->
+  <div *ngIf="isJoined" class="chat-interface">
+    <div class="sidebar">
+      <h3>Online Users</h3>
+      <ul>
+        <li *ngFor="let user of onlineUsers">
+          <span class="status-dot"></span> {{ user }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-chat">
+      <div class="chat-header">
+        <h3>Public Room</h3>
+        <span>Logged in as: <b>{{ username }}</b></span>
+      </div>
+
+      <div class="messages-area">
+        <div *ngFor="let msg of messages" class="message" [ngClass]="{'my-message': msg.sender === username, 'system-message': msg.type !== 'CHAT'}">
+          <div *ngIf="msg.type === 'CHAT'">
+            <span class="sender">{{ msg.sender }}</span>
+            <p>{{ msg.content }}</p>
+          </div>
+          <div *ngIf="msg.type === 'JOIN'" class="system-text">
+            {{ msg.sender }} joined the chat
+          </div>
+          <div *ngIf="msg.type === 'LEAVE'" class="system-text">
+            {{ msg.sender }} left the chat
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" [(ngModel)]="messageContent" placeholder="Type a message..." (keyup.enter)="sendMessage()" />
+        <button (click)="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
